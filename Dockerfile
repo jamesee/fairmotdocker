@@ -1,7 +1,7 @@
 # Dockerfile
 
 # pull the official docker image
-FROM python:3.8.2-slim
+FROM python:3.8.2
 
 # set work directory
 WORKDIR /app
@@ -12,11 +12,20 @@ ENV PYTHONUNBUFFERED 1
 
 # install dependencies
 COPY requirements.txt .
+COPY cameras.txt .
+# COPY app/FairMOT FairMOT
+COPY . .
+
 RUN python -m pip install --upgrade pip
 RUN pip3 install numpy==1.18.4 cython==0.29.24 wheel
 RUN pip3 install lap==0.4.0
 RUN pip3 install -r requirements.txt
-RUN sh FairMOT/DCNv2/make.sh
+RUN apt-get update && apt-get install -y python3-opencv
+RUN apt-get install ffmpeg libsm6 libxext6  -y
 
-# copy project
-COPY . .
+# WORKDIR /app/FairMOT/DCNv2
+RUN python app/FairMOT/DCNv2/setup.py build develop
+ENV PYTHONPATH "${PYTHONPATH}:app/FairMOT/src/lib:app/FairMOT/DCNv2:app/FairMOT:app/FairMOT"
+
+# set work directory
+WORKDIR /app

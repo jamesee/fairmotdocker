@@ -30,7 +30,7 @@ async def startup():
     await User.objects.get_or_create(email="test@test.com")
     await Zones.objects.get_or_create(name="Zone 1")
 
-    await track.eval_prop()
+    # await track.eval_prop()
 
 
 
