@@ -14,8 +14,8 @@ openpyxl
 Pillow
 tensorboardX
 fvcore
-torch==1.9.1 
-torchvision==0.10.1
+torch==1.7.0 
+torchvision==0.8.0
 argparse
 llvmlite==0.36.0
 matplotlib==3.4.3

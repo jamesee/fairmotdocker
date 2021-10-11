@@ -20,7 +20,8 @@ from app.FairMOT.src.lib.tracking_utils.evaluation import Evaluator
 # import datasets.dataset.jde as datasets
 
 from app.FairMOT.src.lib.tracking_utils.utils import mkdir_if_missing
-from opts import opts
+from app.FairMOT.src.lib.opts import opts
+opt = opts().init()
 
 
 def write_results(filename, results, data_type):
