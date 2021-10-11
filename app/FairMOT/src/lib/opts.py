@@ -6,10 +6,11 @@ import argparse
 import os
 import sys
 
-class opts(object):
+class options(object):
   def __init__(self):
     self.parser = argparse.ArgumentParser()
-    # basic experiment setting
+    self.parser.add_argument('--host', type=str, default='0.0.0.0', help='confidence thresh for tracking')
+
     self.parser.add_argument('task', default='mot', help='mot')
     self.parser.add_argument('--dataset', default='jde', help='jde')
     self.parser.add_argument('--exp_id', default='default')
@@ -47,7 +48,7 @@ class opts(object):
                              help='visualization threshold.')
     
     # model
-    self.parser.add_argument('--arch', default='hrnet_18', 
+    self.parser.add_argument('--arch', default='dla_34', 
                              help='model architecture. Currently tested'
                                   'resdcn_34 | resdcn_50 | resfpndcn_34 |'
                                   'dla_34 | hrnet_18')
@@ -58,8 +59,7 @@ class opts(object):
                                   '256 for resnets and 256 for dla.')
     self.parser.add_argument('--down_ratio', type=int, default=4,
                              help='output stride. Currently only supports 4.')
-
-    # input
+ # input
     self.parser.add_argument('--input_res', type=int, default=-1, 
                              help='input height and width. -1 for default from '
                              'dataset. Will be overriden by input_h | input_w')
@@ -68,6 +68,36 @@ class opts(object):
     self.parser.add_argument('--input_w', type=int, default=-1, 
                              help='input width. -1 for default from dataset.')
     
+    # train
+    self.parser.add_argument('--lr', type=float, default=1e-4,
+                             help='learning rate for batch size 12.')
+    self.parser.add_argument('--lr_step', type=str, default='20',
+                             help='drop learning rate by 10.')
+    self.parser.add_argument('--num_epochs', type=int, default=30,
+                             help='total training epochs.')
+    self.parser.add_argument('--batch_size', type=int, default=12,
+                             help='batch size')
+    self.parser.add_argument('--master_batch_size', type=int, default=-1,
+                             help='batch size on the master gpu.')
+    self.parser.add_argument('--num_iters', type=int, default=-1,
+                             help='default: #samples / batch_size.')
+    self.parser.add_argument('--val_intervals', type=int, default=5,
+                             help='number of epochs to run validation.')
+    self.parser.add_argument('--trainval', action='store_true',
+                             help='include validation in training and '
+                                  'test on test set')
+
+    # test
+    self.parser.add_argument('--K', type=int, default=500,
+                             help='max number of output objects.') 
+    self.parser.add_argument('--not_prefetch_test', action='store_true',
+                             help='not use parallal data pre-processing.')
+    self.parser.add_argument('--fix_res', action='store_true',
+                             help='fix testing resolution or keep '
+                                  'the original resolution')
+    self.parser.add_argument('--keep_res', action='store_true',
+                             help='keep the original resolution'
+                                  ' during validation.')
     # tracking
     self.parser.add_argument('--test_mot16', default=False, help='test mot16')
     self.parser.add_argument('--val_mot15', default=False, help='val mot15')
