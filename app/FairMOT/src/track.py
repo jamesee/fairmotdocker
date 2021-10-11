@@ -21,7 +21,6 @@ from app.FairMOT.src.lib.tracking_utils.evaluation import Evaluator
 
 from app.FairMOT.src.lib.tracking_utils.utils import mkdir_if_missing
 from app.FairMOT.src.lib.opts import opts
-opt = opts().init()
 
 
 def write_results(filename, results, data_type):
@@ -84,7 +83,8 @@ def letterbox(img, height=608, width=1088, color=(127.5, 127.5, 127.5)):  # resi
 import time
 from datetime import datetime
 import base64
-def eval_prop(opt):
+def eval_prop():
+    opt = opts().init()
     f = open("cameras.txt", "r")
     camera_list = f.readlines()
     f.close()

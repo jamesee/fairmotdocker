@@ -44,7 +44,6 @@ async def startup():
         # await Cameras.objects.get_or_create(name="Zone 1")
         await PersonInstance.objects.get_or_create(name="PersonInstance1")
         await Person.objects.get_or_create(name="Person 1")
-
         await track.eval_prop()
 
 
