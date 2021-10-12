@@ -12,6 +12,10 @@ import torch
 import itertools
 import openpifpaf
 
+import time
+from datetime import datetime
+import base64
+
 from app.FairMOT.src.lib.tracker.multitracker import JDETracker
 from app.FairMOT.src.lib.tracking_utils import visualization as vis
 from app.FairMOT.src.lib.tracking_utils.log import logger
@@ -80,16 +84,13 @@ def letterbox(img, height=608, width=1088, color=(127.5, 127.5, 127.5)):  # resi
     img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)  # padded rectangular
     return img, ratio, dw, dh
 
-import time
-from datetime import datetime
-import base64
 def eval_prop():
     opt = options().init()
     f = open("cameras.txt", "r")
     camera_list = f.readlines()
     f.close()
     tracker = JDETracker(opt, frame_rate=30)
-    predictor_pifpaf = openpifpaf.Predictor(checkpoint='shufflenetv2k16')
+    predictor_pifpaf = openpifpaf.Predictor(checkpoint='shufflenetv2k30')
 
 
 
@@ -101,7 +102,6 @@ def eval_prop():
         threshold = element[2]
         lat = element[3]
         longi = element[4]
-        in_out = element[5]
         camera_shift_time = int(element[6])
         prev_time = time.time()
 
@@ -115,7 +115,7 @@ def eval_prop():
                 prev_time = time.time()
                 break
             res, img0 = cap.read()  # BGR
-            assert img0 is not None, 'Failed to load frame {:d}'.format(self.count)
+            # assert img0 is not None, 'Failed to load frame {:d}'.format(self.count)
             img0 = cv2.resize(img0, (1920, 1080))
             img, _, _, _ = letterbox(img0, height=1088, width =608)
             img = img[:, :, ::-1].transpose(2, 0, 1)

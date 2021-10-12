@@ -8,7 +8,7 @@ import torch.nn as nn
 import os
 
 from app.FairMOT.src.lib.models.networks.dlav0 import get_pose_net as get_dlav0
-# from app.FairMOT.src.lib.models.networks.pose_dla_dcn import get_pose_net as get_dla_dcn
+from app.FairMOT.src.lib.models.networks.pose_dla_dcn import get_pose_net as get_dla_dcn
 from app.FairMOT.src.lib.models.networks.resnet_dcn import get_pose_net as get_pose_net_dcn
 from app.FairMOT.src.lib.models.networks.resnet_fpn_dcn import get_pose_net as get_pose_net_fpn_dcn
 from app.FairMOT.src.lib.models.networks.pose_hrnet import get_pose_net as get_pose_net_hrnet
@@ -17,7 +17,7 @@ from app.FairMOT.src.lib.models.yolo import get_pose_net as get_pose_net_yolo
 
 _model_factory = {
   'dlav0': get_dlav0, # default DLAup
-  # 'dla': get_dla_dcn,
+  'dla': get_dla_dcn,
   'dlaconv': get_dla_conv,
   'resdcn': get_pose_net_dcn,
   'resfpndcn': get_pose_net_fpn_dcn,
@@ -36,8 +36,11 @@ def load_model(model, model_path, optimizer=None, resume=False,
                lr=None, lr_step=None):
   start_epoch = 0
   checkpoint = torch.load(model_path, map_location=lambda storage, loc: storage)
-  print('loaded {}, epoch {}'.format(model_path, checkpoint['epoch']))
+  # for key in checkpoint:
+  #   print(key)
+  # print('loaded {}, epoch {}'.format(model_path, checkpoint['epoch']))
   state_dict_ = checkpoint['state_dict']
+  # state_dict_ = model.load_state_dict(checkpoint)
   state_dict = {}
   
   # convert data_parallal to model

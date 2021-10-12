@@ -29,6 +29,9 @@ class Zones(ormar.Model):
         tablename = "zones"
     id: int = ormar.Integer(primary_key=True)
     name: str = ormar.String(max_length=128,nullable=False, default="Zone")
+    camera_id: int = ormar.Integer(nullable=False, default=1)
+    x: int = ormar.Integer(nullable=False, default=800)
+    y: int = ormar.Integer(nullable=False, default=600)
 
 
 class Cameras(ormar.Model):
@@ -36,8 +39,8 @@ class Cameras(ormar.Model):
         tablename = "cameras"
     id: int = ormar.Integer(primary_key=True)
     name: str = ormar.String(max_length=128,nullable=False, default="Camera")
-    connectionstring: str = ormar.String(max_length=256,nullable=True)
-    threshold: str = ormar.Integer(nullable=True)
+    connectionstring: str = ormar.String(max_length=256,nullable=False)
+    threshold: int = ormar.Integer(nullable=True)
     lat:float = ormar.Float(nullable=True)
     long:float = ormar.Float(nullable=True)
     # camera_shift_time: int = ormar.Integer()

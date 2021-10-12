@@ -14,12 +14,12 @@ openpyxl
 Pillow
 tensorboardX
 fvcore
-torch==1.7.0 
-torchvision==0.8.0
+torch==1.9.0 
+torchvision
 argparse
 llvmlite==0.36.0
 matplotlib==3.4.3
 mccabe==0.6.1
 motmetrics==1.2.0
 numba==0.53.1
-openpifpaf
+openpifpaf==0.13.0

@@ -15,10 +15,10 @@ class options(object):
     self.parser.add_argument('--dataset', default='jde', help='jde')
     self.parser.add_argument('--exp_id', default='default')
     self.parser.add_argument('--test', action='store_true')
-    #self.parser.add_argument('--load_model', default='../models/ctdet_coco_dla_2x.pth',
-                             #help='path to pretrained model')
-    self.parser.add_argument('--load_model', default='',
+    self.parser.add_argument('--load_model', default='app/FairMOT/models/ctdet_coco_dla_2x.pth',
                              help='path to pretrained model')
+    # self.parser.add_argument('--load_model', default='',
+    #                          help='path to pretrained model')
     self.parser.add_argument('--resume', action='store_true',
                              help='resume an experiment. '
                                   'Reloaded the optimizer parameter and '
@@ -26,7 +26,7 @@ class options(object):
                                   'in the exp dir if load_model is empty.') 
 
     # system
-    self.parser.add_argument('--gpus', default='2, 3',
+    self.parser.add_argument('--gpus', default='-1',
                              help='-1 for CPU, use comma for multiple gpus')
     self.parser.add_argument('--num_workers', type=int, default=8,
                              help='dataloader threads. 0 for single-thread.')
@@ -193,9 +193,17 @@ class options(object):
     print('training chunk_sizes:', opt.chunk_sizes)
 
     opt.root_dir = os.path.join(os.path.dirname(__file__), '..', '..')
+    print('Root Dir:', opt.root_dir)
+
     opt.exp_dir = os.path.join(opt.root_dir, 'exp', opt.task)
+    print('Exp Dir:', opt.exp_dir)
+
     opt.save_dir = os.path.join(opt.exp_dir, opt.exp_id)
+    print('Save Dir:', opt.save_dir)
+
     opt.debug_dir = os.path.join(opt.save_dir, 'debug')
+    print('Debug Dir:', opt.debug_dir)
+
     print('The output will be saved to ', opt.save_dir)
     
     if opt.resume and opt.load_model == '':
@@ -245,7 +253,10 @@ class options(object):
         for k, v in entries.items():
           self.__setattr__(k, v)
     opt = self.parse(args)
+    opt.task = 'mot'
     dataset = Struct(default_dataset_info[opt.task])
+    print(dataset)
     opt.dataset = dataset.dataset
     opt = self.update_dataset_info_and_set_heads(opt, dataset)
     return opt
+ 

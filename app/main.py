@@ -41,13 +41,10 @@ async def startup():
         # create a dummy entry
         await User.objects.get_or_create(email='test@email.com')
         await Zones.objects.get_or_create(name="Zone 1")
-        # await Cameras.objects.get_or_create(name="Zone 1")
+        await Cameras.objects.get_or_create(name="Camera 1",connectionstring='TestVideo17.mp4')
         await PersonInstance.objects.get_or_create(name="PersonInstance1")
         await Person.objects.get_or_create(name="Person 1")
         await track.eval_prop()
-
-
-
 
 
 @app.on_event("shutdown")
