@@ -1,10 +1,6 @@
 # Lauretta Person Reidentification and tracking system - Dockerized
 
 
-Check out the [post](https://testdriven.io/blog/fastapi-docker-traefik/).
-
-## Want to use this project?
-
 ### Requirements
 
 Docker engine
