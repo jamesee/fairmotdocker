@@ -22,6 +22,7 @@ from app.FairMOT.src.lib.tracking_utils.log import logger
 from app.FairMOT.src.lib.tracking_utils.timer import Timer
 from app.FairMOT.src.lib.tracking_utils.evaluation import Evaluator
 # import datasets.dataset.jde as datasets
+from app.db import database, User, Zones, Cameras, PersonInstance, Person, Zone_Status
 
 from app.FairMOT.src.lib.tracking_utils.utils import mkdir_if_missing
 from app.FairMOT.src.lib.opts import options
@@ -149,63 +150,38 @@ def eval_prop():
             frame_id += 1
 
             my_date = datetime.now()
+            
+            Zone_Status.objects.get_or_create(zone_id="1",number=len(predictions))
+            # crowdCount_obj = {
+            #         "camName": cameraName,
+            #         "alertTime": my_date.isoformat(),
+            #         "count": len(predictions),
+            #         "threshold": threshold,
+            #         "location": {
+            #             "latInDegrees": lat,
+            #             "lonInDegrees": longi
+            #         },
+            #         "createInfo":
+            #             {
+            #                 "dateTime": my_date.isoformat(),
+            #                 "sourceSystemId": "ARMY",
+            #                 "action": "CREATE",
+            #                 "userId": "VA System",
+            #                 "username": "VA System",
+            #                 "agency": "OTHERS"
+            #             },
+            #         "updateInfo":
+            #             {
+            #                 "dateTime": my_date.isoformat(),
+            #                 "sourceSystemId": "ARMY",
+            #                 "action": "CREATE",
+            #                 "userId": "VA System",
+            #                 "username": "VA System",
+            #                 "agency": "OTHERS"
+            #             }
+            #     }
 
-            crowdCount_obj = {
-                    "camName": cameraName,
-                    "alertTime": my_date.isoformat(),
-                    "count": len(predictions),
-                    "threshold": threshold,
-                    "location": {
-                        "latInDegrees": lat,
-                        "lonInDegrees": longi
-                    },
-                    "createInfo":
-                        {
-                            "dateTime": my_date.isoformat(),
-                            "sourceSystemId": "ARMY",
-                            "action": "CREATE",
-                            "userId": "VA System",
-                            "username": "VA System",
-                            "agency": "OTHERS"
-                        },
-                    "updateInfo":
-                        {
-                            "dateTime": my_date.isoformat(),
-                            "sourceSystemId": "ARMY",
-                            "action": "CREATE",
-                            "userId": "VA System",
-                            "username": "VA System",
-                            "agency": "OTHERS"
-                        }
-                }
 
-
-            geoFence_obj = {
-                    "camName": cameraName,
-                    "alertTime": my_date.isoformat(),
-                    "location": {
-                        "latInDegrees": lat,
-                        "lonInDegrees": longi
-                    },
-                    "createInfo":
-                        {
-                            "dateTime": my_date.isoformat(),
-                            "sourceSystemId": "ARMY",
-                            "action": "CREATE",
-                            "userId": "VA System",
-                            "username": "VA System",
-                            "agency": "OTHERS"
-                        },
-                    "updateInfo":
-                        {
-                            "dateTime": my_date.isoformat(),
-                            "sourceSystemId": "ARMY",
-                            "action": "CREATE",
-                            "userId": "VA System",
-                            "username": "VA System",
-                            "agency": "OTHERS"
-                        }
-                }
 
             for i, entity_id in enumerate(online_ids):
                 imx = np.ascontiguousarray(np.copy(img0))

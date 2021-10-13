@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 
-from app.db import database, User, Zones, Cameras, PersonInstance, Person
+from app.db import database, User, Zones, Cameras, PersonInstance, Person, Zone_Status
 from src import track
 import itertools
 
@@ -17,10 +17,9 @@ async def read_root():
 async def read_users():
     return await User.objects.all()
 
-@app.get("zones")
-async def read_zones():
-    return await Zones.objects.all()
-
+@app.get("zone_status" )
+async def read_zone_status(zoneid: int = 0):
+    return await Zone_Status.objects.get(zone_id = zoneid)
 
 @app.get("cameras")
 async def read_cameras():
@@ -62,9 +61,10 @@ async def camerareader():
     f = open("cameras.txt", "r")
     camera_list = f.readlines()
     f.close()
-
     for element in itertools.cycle(camera_list):
-        await Cameras.objects.get_or_create(name=element[0],connectionstring=element[1],threshold=element[2],lat=element[3],long=element[4])
+        element = element.split(",")
+
+        await Cameras.objects.get_or_create(name=element[0],connectionstring=element[1],threshold=int(element[2]),lat=float(element[3]),long=float(element[4]))
     return 0
 
 async def zonereader():
@@ -74,7 +74,9 @@ async def zonereader():
     f.close()
 
     for element in itertools.cycle(zone_list):
-        await Zones.objects.get_or_create(name=element[0],camera_id=element[1],x=element[2],y=element[3])
+        element = element.split(",")
+
+        await Zones.objects.get_or_create(name=element[0],camera_id=int(element[1]),x=int(element[2]),y=int(element[3]))
     return 0
 
     

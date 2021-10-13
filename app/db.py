@@ -61,6 +61,13 @@ class Person(ormar.Model):
     name: str = ormar.String(max_length=128,nullable=False, default="Person")
 
 
+class Zone_Status(ormar.Model):
+    class Meta(BaseMeta):
+        tablename = "zone_status"
+    id: int = ormar.Integer(primary_key=True)
+    zone_id: str = ormar.Integer(nullable=False, default="1")
+    number: str = ormar.Integer(nullable=False, default="1")
+
 
 
 engine = sqlalchemy.create_engine(settings.db_url)
