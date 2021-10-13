@@ -60,39 +60,6 @@ class Person(ormar.Model):
     id: int = ormar.Integer(primary_key=True)
     name: str = ormar.String(max_length=128,nullable=False, default="Person")
 
-#  tracking_obj = {
-#                         "camName": cameraName,
-#                         "alertTime": my_date.isoformat(),
-#                         "subjectId": entity_id,
-#                         "location": {
-#                             "latInDegrees": lat,
-#                             "lonInDegrees": longi
-#                         },
-#                         "imagePayload":{
-#                             "fileName": str(frame_id) + ".jpg",
-#                             "data": jpg_as_text,
-#                             "mimeType": "image/jpeg",
-#                             "size": img_bytes,
-#                             "confidence": "1"
-#                         },
-#                         "createInfo":{
-#                             "dateTime": my_date.isoformat(),
-#                             "sourceSystemId": "ARMY",
-#                             "action": "CREATE",
-#                             "userId": "VA System",
-#                             "username": "VA System",
-#                             "agency": "OTHERS"
-#                         },
-#                         "updateInfo":{
-#                             "dateTime": my_date.isoformat(),
-#                             "sourceSystemId": "ARMY",
-#                             "action": "CREATE",
-#                             "userId": "VA System",
-#                             "username": "VA System",
-#                             "agency": "OTHERS"
-#                         }
-#                     }
-
 
 
 

@@ -3,8 +3,9 @@
 from fastapi import FastAPI
 
 from app.db import database, User, Zones, Cameras, PersonInstance, Person
-
 from src import track
+import itertools
+
 app = FastAPI(title="Lauretta Built Environment Analytics")
 
 
@@ -42,6 +43,8 @@ async def startup():
         await User.objects.get_or_create(email='test@email.com')
         await Zones.objects.get_or_create(name="Zone 1")
         await Cameras.objects.get_or_create(name="Camera 1",connectionstring='TestVideo17.mp4')
+        await camerareader()
+        await zonereader()
         await PersonInstance.objects.get_or_create(name="PersonInstance1")
         await Person.objects.get_or_create(name="Person 1")
         await track.eval_prop()
@@ -51,3 +54,27 @@ async def startup():
 async def shutdown():
     if database.is_connected:
         await database.disconnect()
+
+
+
+async def camerareader():
+
+    f = open("cameras.txt", "r")
+    camera_list = f.readlines()
+    f.close()
+
+    for element in itertools.cycle(camera_list):
+        await Cameras.objects.get_or_create(name=element[0],connectionstring=element[1],threshold=element[2],lat=element[3],long=element[4])
+    return 0
+
+async def zonereader():
+
+    f = open("zones.txt", "r")
+    zone_list = f.readlines()
+    f.close()
+
+    for element in itertools.cycle(zone_list):
+        await Zones.objects.get_or_create(name=element[0],camera_id=element[1],x=element[2],y=element[3])
+    return 0
+
+    
