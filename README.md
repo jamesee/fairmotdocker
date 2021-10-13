@@ -1,30 +1,35 @@
-# Dockerizing FastAPI with Postgres, Uvicorn, and Traefik
+# Lauretta Person Reidentification and tracking system - Dockerized
 
-## Want to learn how to build this?
 
 Check out the [post](https://testdriven.io/blog/fastapi-docker-traefik/).
 
 ## Want to use this project?
 
-### Development
+### Requirements
+
+Docker engine
+
+### Getting Started
 
 Build the images and spin up the containers:
+You only need to build it once
+
+1. Copy  [DLA-34 official](https://drive.google.com/file/d/1pl_-ael8wERdUREEnaIfqOV_VF2bEVRT/view) to the /models folder
+2. Run the following code
 
 ```sh
-$ docker-compose up -d --build
+$ docker-compose build
+$ docker-compose up
 ```
 
-Test it out:
+### Testing the APIs
 
-1. [http://fastapi.localhost:8008/](http://fastapi.localhost:8008/)
-1. [http://fastapi.localhost:8081/](http://fastapi.localhost:8081/)
+It will run on 
+http://localhost:8000
 
-### Production
+Read the API documentation
 
-Update the domain in *docker-compose.prod.yml*, and add your email to *traefik.prod.toml*.
+Swagger: http://localhost:8000/docs
+Redoc: http://localhost:8000/redoc
 
-Build the images and run the containers:
 
-```sh
-$ docker-compose -f docker-compose.prod.yml up -d --build
-```
