@@ -43,8 +43,8 @@ class Cameras(ormar.Model):
     threshold: int = ormar.Integer(nullable=True)
     lat:float = ormar.Float(nullable=True)
     long:float = ormar.Float(nullable=True)
-    # camera_shift_time: int = ormar.Integer()
-    # lastchange: datetime.datetime = ormar.DateTime(default=datetime.datetime.now) 
+    camera_shift_time: int = ormar.Integer( default=0)
+    lastchange: datetime.datetime = ormar.DateTime(default=datetime.datetime.now) 
 
 
 class PersonInstance(ormar.Model):

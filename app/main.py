@@ -46,6 +46,7 @@ async def startup():
         await zonereader()
         await PersonInstance.objects.get_or_create(name="PersonInstance1")
         await Person.objects.get_or_create(name="Person 1")
+        print("Running FairMOT Tracker")
         await track.eval_prop()
 
 
@@ -61,22 +62,30 @@ async def camerareader():
     f = open("cameras.txt", "r")
     camera_list = f.readlines()
     f.close()
-    for element in itertools.cycle(camera_list):
+    await Cameras.objects.delete(each=True)
+
+    print("Camera CSV Length: {}",str(len(camera_list)))
+
+    for element in camera_list:
         element = element.split(",")
+        print(element)
 
         await Cameras.objects.get_or_create(name=element[0],connectionstring=element[1],threshold=int(element[2]),lat=float(element[3]),long=float(element[4]))
-    return 0
+    print("Camera CSV Read")
 
 async def zonereader():
 
     f = open("zones.txt", "r")
     zone_list = f.readlines()
     f.close()
-
-    for element in itertools.cycle(zone_list):
+    print("Zone CSV Length: {}",str(len(zone_list)))
+    await Zones.objects.delete(each=True)
+    for element in zone_list:
         element = element.split(",")
+        print(element)
 
         await Zones.objects.get_or_create(name=element[0],camera_id=int(element[1]),x=int(element[2]),y=int(element[3]))
-    return 0
+    print("Zone CSV Read")
+
 
     
