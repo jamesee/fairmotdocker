@@ -4,7 +4,6 @@ from fastapi import FastAPI
 
 from app.db import database, User, Zones, Cameras, PersonInstance, Person, Zone_Status
 from src import track
-import itertools
 
 app = FastAPI(title="Lauretta Built Environment Analytics")
 
