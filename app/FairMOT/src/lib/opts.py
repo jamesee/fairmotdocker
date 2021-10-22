@@ -15,7 +15,7 @@ class options(object):
     self.parser.add_argument('--dataset', default='jde', help='jde')
     self.parser.add_argument('--exp_id', default='default')
     self.parser.add_argument('--test', action='store_true')
-    self.parser.add_argument('--load_model', default='app/FairMOT/models/ctdet_coco_dla_2x.pth',
+    self.parser.add_argument('--load_model', default='app/FairMOT/models/fairmot_dla34.pth',
                              help='path to pretrained model')
     # self.parser.add_argument('--load_model', default='',
     #                          help='path to pretrained model')
