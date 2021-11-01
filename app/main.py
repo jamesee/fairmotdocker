@@ -1,11 +1,13 @@
 # app/main.py
 
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 
 from app.db import database, User, Zones, Cameras, PersonInstance, Person, Zone_Status
-from src import track
+# from src import track
 
 app = FastAPI(title="Lauretta Built Environment Analytics")
+# fair = FastAPI()
+
 
 
 @app.get("/")
@@ -45,8 +47,7 @@ async def startup():
         await zonereader()
         await PersonInstance.objects.get_or_create(name="PersonInstance1")
         await Person.objects.get_or_create(name="Person 1")
-        print("Running FairMOT Tracker")
-        await track.eval_prop()
+        
 
 
 @app.on_event("shutdown")
@@ -54,6 +55,13 @@ async def shutdown():
     if database.is_connected:
         await database.disconnect()
 
+
+
+# @fair.on_event("startup")
+# async def startup():
+#     await FairMOT
+
+# app.mount("/fair", fair)
 
 
 async def camerareader():
@@ -87,4 +95,6 @@ async def zonereader():
     print("Zone CSV Read")
 
 
-    
+# async def FairMOT():
+#     track.eval_prop()
+#     print("Running FairMOT Tracker")

@@ -9,17 +9,17 @@ import torch
 import cv2
 import torch.nn.functional as F
 
-from app.FairMOT.src.lib.models.model import create_model, load_model
-from app.FairMOT.src.lib.models.decode import mot_decode
-from app.FairMOT.src.lib.tracking_utils.utils import *
-from app.FairMOT.src.lib.tracking_utils.log import logger
-from app.FairMOT.src.lib.tracking_utils.kalman_filter import KalmanFilter
-from app.FairMOT.src.lib.models import *
-from app.FairMOT.src.lib.tracker import matching
+from FairMOT.src.lib.models.model import create_model, load_model
+from FairMOT.src.lib.models.decode import mot_decode
+from FairMOT.src.lib.tracking_utils.utils import *
+from FairMOT.src.lib.tracking_utils.log import logger
+from FairMOT.src.lib.tracking_utils.kalman_filter import KalmanFilter
+from FairMOT.src.lib.models import *
+from FairMOT.src.lib.tracker import matching
 from .basetrack import BaseTrack, TrackState
-from app.FairMOT.src.lib.utils.post_process import ctdet_post_process
-from app.FairMOT.src.lib.utils.image import get_affine_transform
-from app.FairMOT.src.lib.models.utils import _tranpose_and_gather_feat
+from FairMOT.src.lib.utils.post_process import ctdet_post_process
+from FairMOT.src.lib.utils.image import get_affine_transform
+from FairMOT.src.lib.models.utils import _tranpose_and_gather_feat
 
 
 class STrack(BaseTrack):

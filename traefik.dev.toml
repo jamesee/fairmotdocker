@@ -1,9 +1,9 @@
 # traefik.dev.toml
 
-# listen on port 80
+# listen on port 82
 [entryPoints]
   [entryPoints.web]
-    address = ":80"
+    address = ":82"
 
 # Traefik dashboard over http
 [api]

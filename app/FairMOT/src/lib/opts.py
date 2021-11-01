@@ -12,10 +12,11 @@ class options(object):
     self.parser.add_argument('--host', type=str, default='0.0.0.0', help='confidence thresh for tracking')
 
     self.parser.add_argument('task', default='mot', help='mot')
+    self.parser.add_argument('--task', default='mot', help='mot')
     self.parser.add_argument('--dataset', default='jde', help='jde')
     self.parser.add_argument('--exp_id', default='default')
     self.parser.add_argument('--test', action='store_true')
-    self.parser.add_argument('--load_model', default='app/FairMOT/models/fairmot_dla34.pth',
+    self.parser.add_argument('--load_model', default='FairMOT/models/fairmot_dla34.pth',
                              help='path to pretrained model')
     # self.parser.add_argument('--load_model', default='',
     #                          help='path to pretrained model')

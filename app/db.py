@@ -3,9 +3,18 @@
 import databases
 import ormar
 import sqlalchemy
-import datetime
+from datetime import datetime
 
-from .config import settings
+# from .config import settings
+
+from pydantic import BaseSettings, Field
+
+
+class Settings(BaseSettings):
+    db_url: str = Field(..., env='DATABASE_URL')
+
+settings = Settings()
+
 
 database = databases.Database(settings.db_url)
 metadata = sqlalchemy.MetaData()
@@ -44,7 +53,7 @@ class Cameras(ormar.Model):
     lat:float = ormar.Float(nullable=True)
     long:float = ormar.Float(nullable=True)
     camera_shift_time: int = ormar.Integer( default=0)
-    lastchange: datetime.datetime = ormar.DateTime(default=datetime.datetime.now) 
+    lastchange: datetime = ormar.DateTime(default=datetime.now) 
 
 
 class PersonInstance(ormar.Model):
@@ -65,8 +74,9 @@ class Zone_Status(ormar.Model):
     class Meta(BaseMeta):
         tablename = "zone_status"
     id: int = ormar.Integer(primary_key=True)
-    zone_id: str = ormar.Integer(nullable=False, default="1")
-    number: str = ormar.Integer(nullable=False, default="1")
+    create_at: datetime = ormar.DateTime(default=datetime.now) 
+    zone_id: str = ormar.Integer(nullable=False, default=1)
+    number: str = ormar.Integer(nullable=False, default=1)
 
 
 

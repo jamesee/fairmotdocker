@@ -2,74 +2,36 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import os
+# import os
 import os.path as osp
 import cv2
-import logging
+# import logging
 import motmetrics as mm
 import numpy as np
 import torch
 import itertools
-import openpifpaf
+from openpifpaf import Predictor
 
 import time
 from datetime import datetime
 import base64
 
-from app.FairMOT.src.lib.tracker.multitracker import JDETracker
-from app.FairMOT.src.lib.tracking_utils import visualization as vis
-from app.FairMOT.src.lib.tracking_utils.log import logger
-from app.FairMOT.src.lib.tracking_utils.timer import Timer
-from app.FairMOT.src.lib.tracking_utils.evaluation import Evaluator
+from FairMOT.src.lib.tracker.multitracker import JDETracker
+from FairMOT.src.lib.tracking_utils import visualization as vis
+from FairMOT.src.lib.tracking_utils.log import logger
+from FairMOT.src.lib.tracking_utils.timer import Timer
+from FairMOT.src.lib.tracking_utils.evaluation import Evaluator
 # import datasets.dataset.jde as datasets
-from app.db import database, User, Zones, Cameras, PersonInstance, Person, Zone_Status
+from db import Zone_Status
 
-from app.FairMOT.src.lib.tracking_utils.utils import mkdir_if_missing
-from app.FairMOT.src.lib.opts import options
-
-
-def write_results(filename, results, data_type):
-    if data_type == 'mot':
-        save_format = '{frame},{id},{x1},{y1},{w},{h},1,-1,-1,-1\n'
-    elif data_type == 'kitti':
-        save_format = '{frame} {id} pedestrian 0 0 -10 {x1} {y1} {x2} {y2} -10 -10 -10 -1000 -1000 -1000 -10\n'
-    else:
-        raise ValueError(data_type)
-
-    with open(filename, 'w') as f:
-        for frame_id, tlwhs, track_ids in results:
-            if data_type == 'kitti':
-                frame_id -= 1
-            for tlwh, track_id in zip(tlwhs, track_ids):
-                if track_id < 0:
-                    continue
-                x1, y1, w, h = tlwh
-                x2, y2 = x1 + w, y1 + h
-                line = save_format.format(frame=frame_id, id=track_id, x1=x1, y1=y1, x2=x2, y2=y2, w=w, h=h)
-                f.write(line)
-    logger.info('save results to {}'.format(filename))
+from FairMOT.src.lib.tracking_utils.utils import mkdir_if_missing
+from FairMOT.src.lib.opts import options
 
 
-def write_results_score(filename, results, data_type):
-    if data_type == 'mot':
-        save_format = '{frame},{id},{x1},{y1},{w},{h},{s},1,-1,-1,-1\n'
-    elif data_type == 'kitti':
-        save_format = '{frame} {id} pedestrian 0 0 -10 {x1} {y1} {x2} {y2} -10 -10 -10 -1000 -1000 -1000 -10\n'
-    else:
-        raise ValueError(data_type)
 
-    with open(filename, 'w') as f:
-        for frame_id, tlwhs, track_ids, scores in results:
-            if data_type == 'kitti':
-                frame_id -= 1
-            for tlwh, track_id, score in zip(tlwhs, track_ids, scores):
-                if track_id < 0:
-                    continue
-                x1, y1, w, h = tlwh
-                x2, y2 = x1 + w, y1 + h
-                line = save_format.format(frame=frame_id, id=track_id, x1=x1, y1=y1, x2=x2, y2=y2, w=w, h=h, s=score)
-                f.write(line)
-    logger.info('save results to {}'.format(filename))
+
+async def send_zone(numberofpersons,zone_id=1):
+    await Zone_Status.objects.get_or_create(create_at=datetime.now(),zone_id=zone_id,number=numberofpersons)
 
 
 
@@ -87,11 +49,12 @@ def letterbox(img, height=608, width=1088, color=(127.5, 127.5, 127.5)):  # resi
 
 def eval_prop():
     opt = options().init()
+    opt.task = 'mot'
     f = open("cameras.txt", "r")
     camera_list = f.readlines()
     f.close()
     tracker = JDETracker(opt, frame_rate=30)
-    predictor_pifpaf = openpifpaf.Predictor(checkpoint='shufflenetv2k30')
+    predictor_pifpaf =  Predictor(checkpoint='shufflenetv2k30')
 
 
 
@@ -150,36 +113,18 @@ def eval_prop():
             frame_id += 1
 
             my_date = datetime.now()
-            
-            Zone_Status.objects.get_or_create(zone_id="1",number=len(predictions))
-            # crowdCount_obj = {
-            #         "camName": cameraName,
-            #         "alertTime": my_date.isoformat(),
-            #         "count": len(predictions),
-            #         "threshold": threshold,
-            #         "location": {
-            #             "latInDegrees": lat,
-            #             "lonInDegrees": longi
-            #         },
-            #         "createInfo":
-            #             {
-            #                 "dateTime": my_date.isoformat(),
-            #                 "sourceSystemId": "ARMY",
-            #                 "action": "CREATE",
-            #                 "userId": "VA System",
-            #                 "username": "VA System",
-            #                 "agency": "OTHERS"
-            #             },
-            #         "updateInfo":
-            #             {
-            #                 "dateTime": my_date.isoformat(),
-            #                 "sourceSystemId": "ARMY",
-            #                 "action": "CREATE",
-            #                 "userId": "VA System",
-            #                 "username": "VA System",
-            #                 "agency": "OTHERS"
-            #             }
-            #     }
+
+            send_zone(len(predictions),1)
+            print(len(predictions))
+            # Zone_Status.objects.get_or_create(zone_id=1,number=int(len(predictions)))
+            # if int(threshold) < len(predictions):
+            #     threshold = threshold + 1
+            #     element[2] = str(threshold)
+            #     url = 'http://145.12.244.4:4011/api/va/crowdcount'
+            #     if time.time() -  timeofcrowdcount > 60:
+            #         print("Sending Crowd Alert")
+            #         x = requests.post(url,json=crowdCount_obj,headers={"content-type":"application/json","x-api-key":"6cf06df6bb9d4bee82c6a965c166c973"})
+            #         timeofcrowdcount = time.time()
 
 
 
@@ -231,6 +176,7 @@ def eval_prop():
                         }
                     }
 
+eval_prop()
 
 
 
