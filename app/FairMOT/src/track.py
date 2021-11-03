@@ -15,7 +15,7 @@ from openpifpaf import Predictor
 import time
 from datetime import datetime
 import base64
-
+import requests
 from FairMOT.src.lib.tracker.multitracker import JDETracker
 from FairMOT.src.lib.tracking_utils import visualization as vis
 from FairMOT.src.lib.tracking_utils.log import logger
@@ -114,8 +114,18 @@ def eval_prop():
 
             my_date = datetime.now()
 
-            send_zone(len(predictions),1)
             print(len(predictions))
+            url = 'http://web:8000/add_zone_status/'
+            
+            zone_status_obj = {
+                        "id": 0,
+                        "create_at": "2021-11-02T16:08:46.505Z",
+                        "zone_id": 1,
+                        "number": len(predictions)
+            }
+                       
+            x = requests.post(url,json=zone_status_obj,headers={"content-type":"application/json","accept":"application/json"})
+
             # Zone_Status.objects.get_or_create(zone_id=1,number=int(len(predictions)))
             # if int(threshold) < len(predictions):
             #     threshold = threshold + 1

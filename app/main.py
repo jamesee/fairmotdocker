@@ -1,8 +1,10 @@
 # app/main.py
 
 from fastapi import FastAPI, BackgroundTasks
-
+from pydantic import BaseModel
+from datetime import datetime
 from app.db import database, User, Zones, Cameras, PersonInstance, Person, Zone_Status
+import json
 # from src import track
 
 app = FastAPI(title="Lauretta Built Environment Analytics")
@@ -10,30 +12,60 @@ app = FastAPI(title="Lauretta Built Environment Analytics")
 
 
 
+class PersonRequest(BaseModel):
+    name: str
+
+class ZoneStatusRequest(BaseModel):
+    create_at: datetime
+    zone_id: int
+    number: int
+
+
+
+
 @app.get("/")
 async def read_root():
     return await User.objects.all()
 
-@app.get("users")
+@app.get("/users/")
 async def read_users():
     return await User.objects.all()
 
-@app.get("zone_status" )
+@app.get("/zone_status/" )
 async def read_zone_status(zoneid: int = 0):
     return await Zone_Status.objects.get(zone_id = zoneid)
 
-@app.get("cameras")
+@app.get("/cameras/")
 async def read_cameras():
     return await Cameras.objects.all()
 
-@app.get("person_instance")
+@app.get("/person_instance/")
 async def read_person_instance():
     return await PersonInstance.objects.all()
 
-@app.get("person")
+@app.get("/person/")
 async def read_person():
     return await Person.objects.all()
 
+
+@app.post("/add_zone_status/")
+async def update_zone_status(zone_status: Zone_Status):
+    zone_json = zone_status.json()
+    zone_dict = json.loads(zone_json)
+
+    await Zone_Status.objects.create(zone_id=int(zone_dict['zone_id']),number=int(zone_dict['number']))
+    return zone_dict
+
+
+
+
+@app.post("/add_person/", response_model=Person)
+async def add_person(person: Person):
+    person_json = person.json()
+    person_dict = person_json.json()
+
+    await Person.objects.get_or_create(name=person['name'])
+    return person_dict
 
 @app.on_event("startup")
 async def startup():
