@@ -6,8 +6,8 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
-    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn app.main:app --host 0.0.0.0'
+      dockerfile: Dockerfile.web
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn main:app --host 0.0.0.0'
     volumes:
       - .:/app
     expose:
@@ -25,11 +25,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.fair
-    command: bash -c 'python3 FairMOT/src/track.py mot'
+    command: bash -c 'python3 src/track.py mot'
+    volumes:
+      - .:/FairMOT
     ports:
       - "100:100"
-    environment:
-      - DATABASE_URL=postgresql://fastapi_traefik:fastapi_traefik@db:5432/fastapi_traefik
     depends_on:
       - db
   db:

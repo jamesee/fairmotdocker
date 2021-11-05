@@ -3,7 +3,7 @@
 from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
 from datetime import datetime
-from app.db import database, User, Zones, Cameras, PersonInstance, Person, Zone_Status
+from db import database, User, Zones, Cameras, PersonInstance, Person, Zone_Status
 import json
 # from src import track
 
@@ -62,7 +62,7 @@ async def update_zone_status(zone_status: Zone_Status):
 @app.post("/add_person/", response_model=Person)
 async def add_person(person: Person):
     person_json = person.json()
-    person_dict = person_json.json()
+    person_dict = json.loads(person_json)
 
     await Person.objects.get_or_create(name=person['name'])
     return person_dict

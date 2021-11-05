@@ -3,10 +3,10 @@
 # pull the official docker image
 FROM python:3.8.12
 
-COPY . .
+COPY FairMOT .
 
 # set work directory
-WORKDIR /app
+# WORKDIR /FairMOT
 
 # set env variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -28,7 +28,7 @@ RUN apt-get install ffmpeg libsm6 libxext6  -y
 
 
 # WORKDIR /app/FairMOT/DCNv2
-RUN python3.8 FairMOT/DCNv2/setup.py install develop
-ENV PYTHONPATH "${PYTHONPATH}:FairMOT/src/lib:FairMOT/DCNv2/src:FairMOT/DCNv2:FairMOT:FairMOT"
+RUN python3.8 DCNv2/setup.py install develop
+ENV PYTHONPATH "${PYTHONPATH}:src/lib:DCNv2/src:DCNv2"
 # set work directory
 # WORKDIR /app
