@@ -15,6 +15,7 @@ ENV PYTHONUNBUFFERED 1
 # install dependencies
 COPY requirements.txt .
 COPY cameras.txt .
+COPY *.mp4 .
 
 RUN python -m pip install --upgrade pip
 RUN pip3.8 install numpy==1.18.4 cython==0.29.24 wheel 

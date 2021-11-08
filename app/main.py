@@ -32,8 +32,8 @@ async def read_users():
     return await User.objects.all()
 
 @app.get("/zone_status/" )
-async def read_zone_status(zoneid: int = 0):
-    return await Zone_Status.objects.get(zone_id = zoneid)
+async def read_zone_status(zoneid: int = 1):
+    return await Zone_Status.objects.filter(zone_id = zoneid).order_by(Zone_Status.create_at.desc()).limit(1).all()
 
 @app.get("/cameras/")
 async def read_cameras():

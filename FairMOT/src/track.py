@@ -29,10 +29,6 @@ from src.lib.opts import options
 
 
 
-async def send_zone(numberofpersons,zone_id=1):
-    await Zone_Status.objects.get_or_create(create_at=datetime.now(),zone_id=zone_id,number=numberofpersons)
-
-
 
 def letterbox(img, height=608, width=1088, color=(127.5, 127.5, 127.5)):  # resize a rectangular image to a padded rectangular
     shape = img.shape[:2]  # shape = [height, width]
