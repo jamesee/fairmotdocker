@@ -1,0 +1,15 @@
+# Dockerfile.monoloco
+
+FROM python:3.8.12
+
+WORKDIR /monoloco
+
+COPY monoloco .
+
+# install dependencies
+COPY requirements-monoloco.txt .
+
+# #TODO caching is required due to long load time
+RUN python3 setup.py bdist_wheel
+RUN pip3 install -e .
+RUN pip3.8 install -r requirements-monoloco.txt

@@ -1,12 +1,10 @@
-# Dockerfile
+# Dockerfile.web
 
-# pull the official docker image
 FROM python:3.8.12
 
-COPY app .
+WORKDIR /app
 
-# set work directory
-# WORKDIR /app
+COPY app .
 
 # set env variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -17,13 +15,8 @@ COPY requirements-web.txt .
 COPY cameras.txt .
 COPY zones.txt .
 
-RUN python -m pip install --upgrade pip
+RUN python3.8 -m pip install --upgrade pip
 RUN pip3.8 install -r requirements-web.txt
 RUN apt-get update && apt-get install -y netcat
 
-
-
-# WORKDIR /app/FairMOT/DCNv2
 ENV PYTHONPATH "${PYTHONPATH}"
-# set work directory
-# WORKDIR /app
