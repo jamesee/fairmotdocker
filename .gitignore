@@ -15,7 +15,7 @@ Icon?
 # FairMOT
 FairMOT/DCNv2/_ext
 FairMOT/DCNv2/build
-FairMOT/models/*
+FairMOT/models/*.pth
 FairMOT/DCNv2/DCNv2.egg-info
 FairMOT/DCNv2/dist
 
