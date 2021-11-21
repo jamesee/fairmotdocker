@@ -26,28 +26,28 @@ services:
       - 8000
     ports:
       - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql://fastapi_traefik:fastapi_traefik@db:5432/fastapi_traefik
+    env_file:
+      - .env
     depends_on:
       - db
     labels:
       - "traefik.enable=false"
       - "traefik.http.routers.fastapi.rule=Host(`fastapi.localhost`)"
       
-  # fair:
-  #   build:
-  #     context: ./FairMOT
-  #     # dockerfile: Dockerfile.fair
-  #   command: bash -c 'python3 src/track.py mot'
-  #   volumes:
-  #     - ./FairMOT:/lauretta
-  #     - ./config:/config
-  #     - ./videos:/videos
-  #   ports:
-  #     - "100:100"
-  #   depends_on:
-  #     - web
-  #     - db
+  fair:
+    build:
+      context: ./FairMOT
+      # dockerfile: Dockerfile.fair
+    command: bash -c 'python3 src/track.py mot'
+    volumes:
+      - ./FairMOT:/lauretta
+      - ./config:/config
+      - ./videos:/videos
+    ports:
+      - "100:100"
+    depends_on:
+      - web
+      - db
 
   monoloco:
     build:
