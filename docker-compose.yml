@@ -17,12 +17,13 @@ services:
 
   web:
     build:
-      context: .
-      dockerfile: Dockerfile.web
+      context: ./app
+      # dockerfile: Dockerfile.web
     command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn main:app --host 0.0.0.0'
     # containers are sharing the same file at root directory
     volumes:
-      - .:/lauretta
+      - ./app:/lauretta
+      - ./config:/config
     expose:
       - 8000
     ports:
