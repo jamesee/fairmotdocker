@@ -28,4 +28,4 @@ ENV/
 env.bak/
 venv.bak/
 
-videos/*
+videos/*.mp4
