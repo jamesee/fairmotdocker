@@ -1,22 +1,15 @@
 # Dockerfile.fair
 
-# pull the official docker image
 FROM python:3.8.12
 
-WORKDIR /FairMOT
-
-COPY FairMOT .
+WORKDIR /lauretta
 
 # set env variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install dependencies
-COPY requirements-fair.txt .
-COPY cameras.txt .
-
-# Copying empty files may cause build failure
-# COPY *.mp4 .
+COPY requirements-fair.txt ./
 
 RUN python3.8 -m pip install --upgrade pip
 RUN pip3.8 install numpy==1.18.4 cython==0.29.24 wheel 
@@ -27,6 +20,16 @@ RUN apt-get update
 RUN apt-get install -y python3-opencv
 RUN apt-get install ffmpeg libsm6 libxext6  -y
 
+# Copy files after installation to prevent reinstalling dependencies during docker build
+COPY FairMOT ./FairMOT
+
+# update working directory after installations
+WORKDIR /lauretta/FairMOT
+
 RUN python3.8 DCNv2/setup.py install develop
+
+# Copy files after installation to prevent repeated DCNv2 setup during docker build
+COPY docs/cameras.txt ./docs
+COPY docs/*.mp4 ./docs
 
 ENV PYTHONPATH "${PYTHONPATH}:src/lib:DCNv2/src:DCNv2"

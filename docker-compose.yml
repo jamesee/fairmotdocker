@@ -7,8 +7,9 @@ services:
       context: .
       dockerfile: Dockerfile.web
     command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; uvicorn main:app --host 0.0.0.0'
+    # containers are sharing the same file at root directory
     volumes:
-      - ./app:/app
+      - .:/lauretta
     expose:
       - 8000
     ports:
@@ -27,7 +28,7 @@ services:
       dockerfile: Dockerfile.fair
     command: bash -c 'python3 src/track.py mot'
     volumes:
-      - ./FairMOT:/FairMOT
+      - .:/lauretta
     ports:
       - "100:100"
     depends_on:
@@ -39,7 +40,7 @@ services:
       dockerfile: Dockerfile.monoloco
     command: bash -c 'python3 -m monoloco.run predict docs/frame0032.jpg --activities social_distance --output_types front bird'
     volumes:
-      - ./monoloco:/monoloco
+      - .:/lauretta
     ports:
       - "200:200"
     depends_on:

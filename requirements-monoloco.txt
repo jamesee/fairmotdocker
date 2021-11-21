@@ -28,6 +28,7 @@ sdist==0.0.0
 setuptools-scm==6.3.2
 six==1.16.0
 soupsieve==2.3.1
+requests==2.26.0
 tomli==1.2.2
 torch==1.10.0
 torchvision==0.11.1

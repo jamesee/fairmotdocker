@@ -2,14 +2,21 @@
 
 FROM python:3.8.12
 
-WORKDIR /monoloco
+WORKDIR /lauretta
 
-COPY monoloco .
 
 # install dependencies
-COPY requirements-monoloco.txt .
+COPY requirements-monoloco.txt ./
 
-# #TODO caching is required due to long load time
+RUN pip3.8 install -r requirements-monoloco.txt
+
+# Copy files after installation to prevent reinstalling dependencies during docker build
+COPY monoloco ./monoloco
+
+# update working directory after installations
+WORKDIR /lauretta/monoloco
+
 RUN python3 setup.py bdist_wheel
 RUN pip3 install -e .
-RUN pip3.8 install -r requirements-monoloco.txt
+
+ENV PYTHONPATH "${PYTHONPATH}:monoloco"
