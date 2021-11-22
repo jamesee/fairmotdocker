@@ -34,20 +34,20 @@ services:
       - "traefik.enable=false"
       - "traefik.http.routers.fastapi.rule=Host(`fastapi.localhost`)"
       
-  fair:
-    build:
-      context: ./FairMOT
-      # dockerfile: Dockerfile.fair
-    command: bash -c 'python3 src/track.py mot'
-    volumes:
-      - ./FairMOT:/lauretta
-      - ./config:/config
-      - ./videos:/videos
-    ports:
-      - "100:100"
-    depends_on:
-      - web
-      - db
+  # fair:
+  #   build:
+  #     context: ./FairMOT
+  #     # dockerfile: Dockerfile.fair
+  #   command: bash -c 'python3 src/track.py mot'
+  #   volumes:
+  #     - ./FairMOT:/lauretta
+  #     - ./config:/config
+  #     - ./videos:/videos
+  #   ports:
+  #     - "100:100"
+  #   depends_on:
+  #     - web
+  #     - db
 
   monoloco:
     build:
@@ -72,6 +72,16 @@ services:
     volumes:
       - "./traefik.dev.toml:/etc/traefik/traefik.toml"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  # pgadmin:
+  #   container_name: pgadmin4_container
+  #   image: dpage/pgadmin4
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
+  #     PGADMIN_DEFAULT_PASSWORD: root
+  #   ports:
+  #     - "5050:80"
 
 volumes:
   postgres_data:

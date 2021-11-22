@@ -145,8 +145,9 @@ def webcam(args):
 
         # [james]
         #TODO: put the request.post here 
-        print(f"request.post ...")
-        print(f"xyz_pred: {dic_out['xyz_pred']}, social dist: {dic_out['social_distance']}")
+        LOG.info(f"******** requests.post routine ********")
+        LOG.info(f" # xyz_pred: {dic_out['xyz_pred']}")
+        LOG.info(f" # social_dist: {dic_out['social_distance']}")
 
 
         # =============== added by Endy - BEGIN
@@ -155,21 +156,24 @@ def webcam(args):
         camera_to_person_xyz = dic_out['xyz_pred']
 
         personID = 2
-        for xyz in camera_to_person_xyz:
-            x = xyz[0]
-            # y = xyz[1]
-            z = xyz[2]
+        if len(dic_out['xyz_pred']) > 0:
+            for xyz in camera_to_person_xyz:
+                x = xyz[0]
+                # y = xyz[1]
+                z = xyz[2]
 
-            person_instance_obj = {
-                        "id": 0,
-                        "name": f"PersonInstance{personID}",
-                        "x": x,
-                        "z": z
-            }
-
-            x = requests.post(url,json=person_instance_obj,headers={"content-type":"application/json","accept":"application/json"})
-            
-            personID += 1
+                person_instance_obj = {
+                            "id": 0,
+                            "name": f"PersonInstance{personID}",
+                            "x": x,
+                            "z": z
+                }
+                start_post = time.time()
+                x = requests.post(url,json=person_instance_obj,headers={"content-type":"application/json","accept":"application/json"})
+                LOG.info(f" # post-response : {x.json()}")      
+                end_post = time.time()
+                LOG.info(" # requests.post-time: {:.2f} ms".format((end_post-start_post)*1000))
+                personID += 1
         # =============== added by Endy - END
 
         LOG.debug(dic_out)

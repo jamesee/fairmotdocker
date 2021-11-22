@@ -64,13 +64,23 @@ async def add_person(person: Person):
     await Person.objects.get_or_create(name=person['name'])
     return person_dict
 
-@app.post("/add_person_instance/")
-async def add_person_instance(person_instance: PersonInstance):
+async def insertDBPersonInstance(person_instance: PersonInstance):
     person_instance_json = person_instance.json()
     person_instance_dict = json.loads(person_instance_json)
-
     await PersonInstance.objects.create(name=person_instance_dict['name'],x=float(person_instance_dict['x']),z=float(person_instance_dict['z']))
-    return person_instance_dict
+
+@app.post("/add_person_instance/")
+async def add_person_instance(person_instance: PersonInstance, background_tasks: BackgroundTasks):
+    background_tasks.add_task(insertDBPersonInstance, person_instance)
+    return person_instance.json()
+
+# @app.post("/add_person_instance/")
+# async def add_person_instance(person_instance: PersonInstance):
+#     person_instance_json = person_instance.json()
+#     person_instance_dict = json.loads(person_instance_json)
+
+#     await PersonInstance.objects.create(name=person_instance_dict['name'],x=float(person_instance_dict['x']),z=float(person_instance_dict['z']))
+#     return person_instance_dict
 
 @app.on_event("startup")
 async def startup():
