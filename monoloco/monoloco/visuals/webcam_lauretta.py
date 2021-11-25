@@ -25,6 +25,7 @@ from ..visuals import Printer
 from ..network import Loco, preprocess_pifpaf, load_calibration
 from ..predict import download_checkpoints
 import requests
+import itertools
 
 LOG = logging.getLogger(__name__)
 
@@ -72,6 +73,13 @@ def factory_from_args(args):
 
     return args, dic_models
 
+def read_camera_config(filename):
+    f = open(filename, "r")
+    camera_list = f.readlines()
+    f.close()
+    
+    # cameraName, cameraIP, threshold, lat, longi, _, camera_shift_time = camera_list[0].split(",")
+    return camera_list[0].split(",")
 
 def webcam(args):
 
@@ -88,8 +96,8 @@ def webcam(args):
     predictor = openpifpaf.Predictor(checkpoint=args.checkpoint)
 
     # Start recording
-    #[James-debug]
-    cam = cv2.VideoCapture(args.images[0])
+    _, cameraIP, _, _, _, _,_ = read_camera_config("/config/cameras.txt")
+    cam = cv2.VideoCapture(cameraIP)
     # cam = cv2.VideoCapture(args.camera)
     visualizer_mono = None
 

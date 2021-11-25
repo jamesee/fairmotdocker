@@ -64,11 +64,8 @@ def eval_prop():
         camera_shift_time = int(element[6])
         prev_time = time.time()
 
-        if ".mp4" in cameraIP:
-            print(f"Using demo {cameraIP} files...")
-            cap = cv2.VideoCapture(cameraIP)
-        else:
-            cap = cv2.VideoCapture(cameraIP)
+
+        cap = cv2.VideoCapture(cameraIP)
 
         timer = Timer()
         results = []

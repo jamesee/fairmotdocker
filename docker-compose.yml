@@ -53,7 +53,7 @@ services:
     build:
       context: ./monoloco
       # dockerfile: Dockerfile.monoloco
-    command: bash -c 'python3 -m monoloco.run predict --webcam /videos/fastapidemoclip.mp4 --activities social_distance --output_types multi'
+    command: bash -c 'python3 -m monoloco.run predict --webcam --activities social_distance --output_types multi'
     volumes:
       - ./monoloco:/lauretta
       - ./config:/config
