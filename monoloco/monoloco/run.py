@@ -144,8 +144,8 @@ def main():
             #[James]
             # from .visuals.webcam import webcam
             # webcam(args)
-            from .visuals.webcam_lauretta import webcam
-            webcam(args)
+            from .visuals.consumer_lauretta import video_run
+            video_run(args)
         else:
             from .predict import predict
             predict(args)

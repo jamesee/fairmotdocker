@@ -60,20 +60,24 @@ services:
   #     - web
   #     - db
 
-  # monoloco:
-  #   build:
-  #     context: ./monoloco
-  #     # dockerfile: Dockerfile.monoloco
-  #   command: bash -c 'python3 -m monoloco.run predict --webcam --activities social_distance --output_types multi'
-  #   volumes:
-  #     - ./monoloco:/lauretta
-  #     - ./config:/config
-  #     - ./videos:/videos
-  #   ports:
-  #     - "200:200"
-  #   depends_on:
-  #     - web
-  #     - db
+  monoloco:
+    build:
+      context: ./monoloco
+      # dockerfile: Dockerfile.monoloco
+    # command: bash -c 'python3 -m monoloco.run predict --webcam --activities social_distance --output_types multi'
+    env_file:
+      - .env
+    volumes:
+      - ./monoloco:/lauretta
+      # - ./config:/config
+      # - ./videos:/videos
+    depends_on:
+      - rabbitmq
+      - opencv-producer
+      - web
+      - db
+    restart: always
+
 
   traefik:
     image: traefik:v2.2
@@ -106,6 +110,18 @@ services:
     depends_on:
       - rabbitmq
     restart: always
+
+  # opencv-consumer:
+  #   build:
+  #     context: ./opencv-consumer
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./opencv-consumer:/lauretta
+  #   depends_on:
+  #     - rabbitmq
+  #     - opencv-publisher
+  #   restart: always
 
 volumes:
   postgres_data:

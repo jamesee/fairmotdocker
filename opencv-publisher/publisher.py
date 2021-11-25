@@ -51,7 +51,6 @@ queue.declare()
 
 # Video Capture by OpenCV
 
-
 capture = cv2.VideoCapture(cameraIP)
 encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),90]
 
