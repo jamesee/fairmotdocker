@@ -29,3 +29,4 @@ env.bak/
 venv.bak/
 
 videos/*.mp4
+opencv-publisher/venv

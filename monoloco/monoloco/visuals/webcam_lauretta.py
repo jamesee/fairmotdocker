@@ -186,7 +186,7 @@ def webcam(args):
 
         LOG.debug(dic_out)
 
-        # [James] commented out visualizer_mo
+        # [James] commented out visualizer_mono
         # visualizer_mono.send((pil_image, dic_out, pifpaf_outs))
 
         #TODO: [james] to comment out cv2.imshow on production
