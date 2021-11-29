@@ -42,9 +42,8 @@ class Worker(ConsumerMixin):
                          accept=['image/jpeg'])]
 
     def on_message(self, body, message):
+
         # get the original jpeg byte array size
-        if sys.getsizeof(body) < 33:
-            return 0
         size = sys.getsizeof(body) - 33
         # size = sys.getsizeof(body.tobytes()) - 33
         # jpeg-encoded byte array into numpy array
@@ -54,21 +53,24 @@ class Worker(ConsumerMixin):
         # decode jpeg-encoded numpy array 
         image = cv2.imdecode(np_array, 1)
 
+
         # show image
         # cv2.imshow("image", image)
         # cv2.waitKey(1)
 
         webcam(self.args, image)
-        # time.sleep(2)
-
+        # LOG.info("Sleep 10 ...")
+        # time.sleep(10)
+        
         # send message ack
         message.ack()
+
 
 def video_run(args):
     exchange = Exchange("video-exchange", type="direct")
     queues = [Queue("video-queue", exchange, routing_key="video")]
-    # with Connection(rabbit_url, heartbeat=20) as conn:
-    with Connection(rabbit_url) as conn:
+    with Connection(rabbit_url, heartbeat=100) as conn:
+    # with Connection(rabbit_url) as conn:
             worker = Worker(conn, queues, args)
             worker.run()
 

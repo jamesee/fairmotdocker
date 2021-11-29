@@ -50,10 +50,10 @@ class Worker(ConsumerMixin):
         image = cv2.imdecode(np_array, 1)
 
         # show image
-        # cv2.imshow("image", image)
-        # cv2.waitKey(1)
+        cv2.imshow("image", image)
+        cv2.waitKey(1)
 
-        time.sleep(2)
+        # time.sleep(2)
         # send message ack
         message.ack()
 

@@ -26,7 +26,7 @@ from src.lib.tracking_utils.evaluation import Evaluator
 from src.lib.tracking_utils.utils import mkdir_if_missing
 from src.lib.opts import options
 
-
+import os
 
 
 
@@ -45,7 +45,11 @@ def letterbox(img, height=608, width=1088, color=(127.5, 127.5, 127.5)):  # resi
 def eval_prop():
     opt = options().init()
     opt.task = 'mot'
-    f = open("/config/cameras.txt", "r")
+    if os.getenv("CAMERA_CONFIG"):
+        f = open(os.getenv("CAMERA_CONFIG"), "r")
+    else:
+        f = open("../config/cameras.txt", "r")
+        
     camera_list = f.readlines()
     f.close()
     tracker = JDETracker(opt, frame_rate=30)
@@ -64,7 +68,11 @@ def eval_prop():
         camera_shift_time = int(element[6])
         prev_time = time.time()
 
-
+        if not os.getenv("CAMERA_CONFIG"):
+            # cameraIP = "../videos/fastapidemoclip.mp4"
+            # cameraIP = "../videos/MOT16-03.mp4"
+            # cameraIP = "../videos/demo.mp4"
+            cameraIP = "../videos/demo2.mp4"
         cap = cv2.VideoCapture(cameraIP)
 
         timer = Timer()
@@ -104,8 +112,10 @@ def eval_prop():
             results.append((frame_id + 1, online_tlwhs, online_ids))
             online_im = vis.plot_tracking(img0, online_tlwhs, online_ids, frame_id=frame_id,
                                             fps=1. / timer.average_time)
-            # cv2.imshow('online_im', online_im)
-            # cv2.waitKey(1)
+            
+            if not os.getenv("CAMERA_CONFIG"):
+                cv2.imshow('online_im', online_im)
+                cv2.waitKey(1)
             frame_id += 1
 
             my_date = datetime.now()
@@ -119,8 +129,9 @@ def eval_prop():
                         "zone_id": 1,
                         "number": len(predictions)
             }
-                       
-            x = requests.post(url,json=zone_status_obj,headers={"content-type":"application/json","accept":"application/json"})
+
+            if os.getenv("CAMERA_CONFIG"):  
+                x = requests.post(url,json=zone_status_obj,headers={"content-type":"application/json","accept":"application/json"})
 
             # Zone_Status.objects.get_or_create(zone_id=1,number=int(len(predictions)))
             # if int(threshold) < len(predictions):

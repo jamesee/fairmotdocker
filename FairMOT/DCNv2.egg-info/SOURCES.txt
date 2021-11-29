@@ -1,0 +1,11 @@
+/Users/james/Developments/SGInnovate/Lauretta/endy-fairmotdocker/FairMOT/DCNv2/src/vision.cpp
+/Users/james/Developments/SGInnovate/Lauretta/endy-fairmotdocker/FairMOT/DCNv2/src/cpu/dcn_v2_cpu.cpp
+/Users/james/Developments/SGInnovate/Lauretta/endy-fairmotdocker/FairMOT/DCNv2/src/cpu/dcn_v2_im2col_cpu.cpp
+/Users/james/Developments/SGInnovate/Lauretta/endy-fairmotdocker/FairMOT/DCNv2/src/cpu/dcn_v2_psroi_pooling_cpu.cpp
+DCNv2/__init__.py
+DCNv2/dcn_v2.py
+DCNv2/setup.py
+DCNv2.egg-info/PKG-INFO
+DCNv2.egg-info/SOURCES.txt
+DCNv2.egg-info/dependency_links.txt
+DCNv2.egg-info/top_level.txt
