@@ -8,6 +8,7 @@ Implementation adapted from https://github.com/vita-epfl/openpifpaf/blob/master/
 
 import time
 import logging
+import os
 
 import torch
 import matplotlib.pyplot as plt
@@ -159,7 +160,11 @@ def webcam(args, frame):
 
 
     # =============== added by Endy - BEGIN
-    url = 'http://web:8000/add_person_instance/'
+    if os.getenv("LOADBALANCER_ENDPOINT"):
+        url = os.getenv("LOADBALANCER_ENDPOINT") + '/add_person_instance/'
+    # else:
+    #     url = 'http://web:8000/add_person_instance/'
+    
 
     camera_to_person_xyz = dic_out['xyz_pred']
 
