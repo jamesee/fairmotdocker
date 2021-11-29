@@ -83,6 +83,7 @@ def eval_prop():
                 prev_time = time.time()
                 break
             res, img0 = cap.read()  # BGR
+
             # assert img0 is not None, 'Failed to load frame {:d}'.format(self.count)
             img0 = cv2.resize(img0, (1920, 1080))
             img, _, _, _ = letterbox(img0, height=1088, width =608)
@@ -121,7 +122,10 @@ def eval_prop():
             my_date = datetime.now()
 
             print(len(predictions))
-            url = 'http://web:8000/add_zone_status/'
+            if os.getenv("LOADBALANCER_ENDPOINT"):
+                url = os.getenv("LOADBALANCER_ENDPOINT") + '/add_zone_status/'
+            else:
+                url = 'http://web:8000/add_zone_status/'
             
             zone_status_obj = {
                         "id": 0,

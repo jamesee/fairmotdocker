@@ -39,15 +39,17 @@ channel = conn.channel()
 
 # Kombu Exchange
 # - set delivery_mode to transient to prevent disk writes for faster delivery
-exchange = Exchange("video-exchange", type="direct", delivery_mode=1)
+exchange = Exchange("video-exchange", type="fanout", delivery_mode=1)
 
 # Kombu Producer
 producer = Producer(exchange=exchange, channel=channel, routing_key="video")
 
 # Kombu Queue
-queue = Queue(name="video-queue", exchange=exchange, routing_key="video") 
-queue.maybe_bind(conn)
-queue.declare()
+queues = [Queue(name="monoloco-queue", exchange=exchange, routing_key="video"), Queue(name="fairmot-queue", exchange=exchange, routing_key="video") ]
+
+for queue in queues:
+    queue.maybe_bind(conn)
+    queue.declare()
 
 # Video Capture by OpenCV
 
@@ -58,7 +60,7 @@ while True:
     ret, frame = capture.read()
     if ret is True:
         # Make image smaller for faster delivery
-        frame = cv2.resize(frame, None, fx=0.6, fy=0.6)
+        # frame = cv2.resize(frame, None, fx=0.6, fy=0.6)
         # Encode into JPEG
         result, imgencode = cv2.imencode('.jpg', frame, encode_param)
         # Send JPEG-encoded byte array

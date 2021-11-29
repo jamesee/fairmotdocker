@@ -16,7 +16,8 @@ import logging
 from kombu import Connection, Exchange, Queue
 from kombu.mixins import ConsumerMixin
 
-from .webcam_lauretta import webcam
+from .track_lauretta import eval_prop_loop
+
 
 LOG = logging.getLogger(__name__)
 
@@ -31,48 +32,23 @@ LOG.info(f"rabbit_url :{rabbit_url}")
 
 # Kombu Message Consuming Worker
 class Worker(ConsumerMixin):
-    def __init__(self, connection, queues, args):
+    def __init__(self, connection, queues):
         self.connection = connection
         self.queues = queues
-        self.args = args
 
     def get_consumers(self, Consumer, channel):
         return [Consumer(queues=self.queues,
-                         callbacks=[self.on_message],
+                         callbacks=[eval_prop_loop],
                          accept=['image/jpeg'])]
 
-    def on_message(self, body, message):
-
-        # get the original jpeg byte array size
-        size = sys.getsizeof(body) - 33
-        # size = sys.getsizeof(body.tobytes()) - 33
-        # jpeg-encoded byte array into numpy array
-        np_array = np.frombuffer(body, dtype=np.uint8)
-        # np_array = np.frombuffer(body.tobytes(), dtype=np.uint8)
-        np_array = np_array.reshape((size, 1))
-        # decode jpeg-encoded numpy array 
-        image = cv2.imdecode(np_array, 1)
 
 
-        # show image
-        # cv2.imshow("image", image)
-        # cv2.waitKey(1)
-
-        webcam(self.args, image)
-        # LOG.info("Sleep 10 ...")
-        # time.sleep(10)
-        
-        # send message ack
-        message.ack()
-
-
-def video_run(args):
+def video_run(camera_shift_time, prev_time, timer,results,frame_id):
     exchange = Exchange("video-exchange", type="fanout")
-    queues = [Queue("monoloco-queue", exchange, routing_key="video")]
+    queues = [Queue("fairmot-queue", exchange, routing_key="video")]
     with Connection(rabbit_url, heartbeat=100) as conn:
-    # with Connection(rabbit_url) as conn:
-            worker = Worker(conn, queues, args)
+            worker = Worker(conn, queues)
             worker.run()
 
 # if __name__ == "__main__":
-#     run()
+#     video_run()

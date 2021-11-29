@@ -105,7 +105,8 @@ def webcam(args, frame):
 
     start = time.time()
     # ret, frame = cam.read()
-    scale = (args.long_edge)/frame.shape[0]
+    # scale = (args.long_edge)/frame.shape[0]
+    scale = 1.0
     image = cv2.resize(frame, None, fx=scale, fy=scale)
     height, width, _ = image.shape
     LOG.debug('resized image size: {}'.format(image.shape))
@@ -162,8 +163,8 @@ def webcam(args, frame):
     # =============== added by Endy - BEGIN
     if os.getenv("LOADBALANCER_ENDPOINT"):
         url = os.getenv("LOADBALANCER_ENDPOINT") + '/add_person_instance/'
-    # else:
-    #     url = 'http://web:8000/add_person_instance/'
+    else:
+        url = 'http://web:8000/add_person_instance/'
     
 
     camera_to_person_xyz = dic_out['xyz_pred']

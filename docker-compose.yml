@@ -54,40 +54,41 @@ services:
     ports:
       - "80:80"
       
-  # fair:
-  #   build:
-  #     context: ./FairMOT
-  #     # dockerfile: Dockerfile.fair
-  #   command: bash -c 'python3 src/track.py mot'
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #     - ./FairMOT:/lauretta
-  #     - ./config:/config
-  #     - ./videos:/videos
-  #   # ports:
-  #   #   - "100:100"
-  #   depends_on:
-  #     - web
-  #     - db
-
-  monoloco:
+  fair:
     build:
-      context: ./monoloco
-      # dockerfile: Dockerfile.monoloco
-    # command: bash -c 'python3 -m monoloco.run predict --webcam --activities social_distance --output_types multi'
+      context: ./FairMOT
+      # dockerfile: Dockerfile.fair
+    # command: bash -c 'python3 -m src.consumer_lauretta mot'
+    command: bash -c 'python3 -m src.track mot'
     env_file:
       - .env
     volumes:
-      - ./monoloco:/lauretta
-      # - ./config:/config
-      # - ./videos:/videos
+      - ./FairMOT:/lauretta
+      - ./config:/config
+      - ./videos:/videos
+    # ports:
+    #   - "100:100"
     depends_on:
-      - rabbitmq
-      - opencv-producer
       - web
       - db
-    restart: always
+
+  # monoloco:
+  #   build:
+  #     context: ./monoloco
+  #     # dockerfile: Dockerfile.monoloco
+  #   # command: bash -c 'python3 -m monoloco.run predict --webcam --activities social_distance --output_types multi'
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./monoloco:/lauretta
+  #     # - ./config:/config
+  #     # - ./videos:/videos
+  #   depends_on:
+  #     - rabbitmq
+  #     - opencv-producer
+  #     - web
+  #     - db
+  #   restart: always
 
 
   # traefik:
